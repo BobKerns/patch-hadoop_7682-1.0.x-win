@@ -1,11 +1,11 @@
 # Workaround for HADOOP-7682 on Windows: taskTracker could not start because "Failed to set permissions" to "ttprivate to 0700" 
 
 This simple patch for Hadoop 1.0.3 should allow you to avoid the longstanding, dreaded file permission exceptions when running Hadoop on Windows as described in [issue HADOOP-7682](https://issues.apache.org/jira/browse/HADOOP-7682). It was [suggested by Joshua Caplan]
-(https://issues.apache.org/jira/browse/HADOOP-7682?page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel&focusedCommentId=13440120#comment-13440120).
+(https://issues.apache.org/jira/browse/HADOOP-7682?page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel&focusedCommentId=13440120#comment-13440120) as a simpler alternative to [shaving a yak](http://en.wikisource.org/wiki/User:Fkorning/Code/Hadoop-on-Cygwin).
 
-The patch comprises a single class with two overridden methods that ignore `IOException`s when trying to set file permissions. Since these potentially important exceptions are swallowed, I don't recommend running this patch in [production on Windows](http://en.wikisource.org/wiki/User:Fkorning/Code/Hadoop-on-Cygwin), or in an environment that supports full file permissions, like Linux or Mac OS X.
+The patch comprises a single class with two overridden methods that ignore `IOException`s when trying to set file permissions. Since these potentially important exceptions are swallowed, I don't recommend running this patch in production on Windows, or in an environment that supports setting full file permissions, like Linux or Mac OS X.
 
-Note, the patch allows getting past the file permission exceptions when running on Windows, but doesn't change the fact that Hadoop must be run using Cygwin.
+Note, the patch allows getting past the file permission exceptions when running on Windows, but doesn't change the fact that Hadoop must be run using Cygwin. It also doesn't address any of the other potential issues that may arise when running on Windows, but it seems to work like a charm for single-node job development and testing.
 
 ## Usage instructions
 
