@@ -1,10 +1,11 @@
 # Workaround for HADOOP-7682 on Windows: taskTracker could not start because "Failed to set permissions" to "ttprivate to 0700" 
 
-This simple patch for Hadoop 1.0.3 was suggested by Joshua Caplan:
-https://issues.apache.org/jira/browse/HADOOP-7682?page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel&focusedCommentId=13440120#comment-13440120
+This simple patch for Hadoop 1.0.3 should allow you to avoid the longstanding, dreaded file permission exceptions when running Hadoop on Windows as described in [issue HADOOP-7682](https://issues.apache.org/jira/browse/HADOOP-7682). It was [suggested by Joshua Caplan]
+(https://issues.apache.org/jira/browse/HADOOP-7682?page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel&focusedCommentId=13440120#comment-13440120).
 
-This patch comprises a single class with two overridden methods that ignore `IOException`s when trying to set file permissions. I don't recommend running this patch in [production on Windows](http://en.wikisource.org/wiki/User:Fkorning/Code/Hadoop-on-Cygwin), or in an environment that supports full file permissions.
+The patch comprises a single class with two overridden methods that ignore `IOException`s when trying to set file permissions. Since these potentially important exceptions are swallowed, I don't recommend running this patch in [production on Windows](http://en.wikisource.org/wiki/User:Fkorning/Code/Hadoop-on-Cygwin), or in an environment that supports full file permissions, like Linux or Mac OS X.
 
+Note, the patch allows getting past the file permission exceptions when running on Windows, but doesn't change the fact that Hadoop must be run using Cygwin.
 
 ## Usage instructions
 
@@ -23,7 +24,7 @@ This patch comprises a single class with two overridden methods that ignore `IOE
         	</property>
         </configuration>
 
-4. Run your job as usual. You should see some logging if the patch is enabled and working.
+4. Run your job as usual (using Cygwin). You should see some logging to `System.err` if the patch is enabled and working.
 
 ## Build instructions
 
