@@ -5,7 +5,13 @@ This simple patch for Hadoop 1.0.3 should allow you to avoid the longstanding, d
 
 The patch comprises a single class with two overridden methods that ignore `IOException`s when trying to set file permissions. Since these potentially important exceptions are swallowed, I don't recommend running this patch in production on Windows, or in an environment that supports setting full file permissions, like Linux or Mac OS X.
 
-Note, the patch allows getting past the file permission exceptions when running on Windows, but doesn't change the fact that Hadoop must be run using Cygwin. It also doesn't address any of the other potential issues that may arise when running on Windows, but it seems to work like a charm for single-node job development and testing.
+## Caveats
+
+The patch allows getting past the file permission exceptions when running on Windows, but doesn't change the fact that Hadoop must be run using Cygwin. It also doesn't address any of the other potential issues that may arise when running on Windows, but it seems to work like a charm for single-node job development and testing.
+
+Note, the patch installation described below only appears to work when running Hadoop in standalone mode, which is the norm for job development and testing. If you've configured Hadoop to run in pseudo-distributed or fully distributed mode on Windows (i.e. "production" mode), there is some difference in the way child processes are spawned that won't include the patch in the child VMs' classpaths. As a result, I strongly recommend running only in standalone mode on Windows for testing (with the patch and its unknown side effects), and running Hadoop on a fully-supported platform (without the patch) for production jobs.
+
+If you absolutely must run in pseudo-distributed or fully distributed mode on Windows and the patch installed according to the instructions below doesn't work, you could instead try putting the patch JAR in the JDK's `${JAVA_HOME}/jre/lib/ext` directory, which includes it in the classpath for all Java VMs. I haven't tried this myself, so YMMV.
 
 ## Usage instructions
 
